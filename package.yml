@@ -1,0 +1,70 @@
+package: scheduler
+version: '1.0.0-dev'
+author: 'KLXM Crossmedia GmbH'
+supportpage: https://github.com/KLXM/scheduler/issues
+
+requires:
+    redaxo: ^5.18.0
+    php:
+        version: '>=8.4'
+        extensions: [intl, json, mbstring, xml]
+    packages:
+        dav: '>=1.0.0-dev'
+
+default_config:
+    default_timezone: Europe/Berlin
+    horizon_back_months: 12
+    horizon_ahead_months: 36
+    max_occurrences_per_event: 5000
+    default_all_day: true
+    week_starts_on: 1
+
+page:
+    title: 'translate:scheduler_title'
+    perm: 'scheduler[]'
+    icon: rex-icon fa-calendar
+    subpages:
+        calendar:
+            title: 'translate:scheduler_calendar'
+            icon: rex-icon fa-calendar
+        events:
+            title: 'translate:scheduler_events'
+            icon: rex-icon fa-list-ul
+        calendars:
+            title: 'translate:scheduler_calendars'
+            icon: rex-icon fa-layer-group
+            perm: 'scheduler[calendars]'
+        locations:
+            title: 'translate:scheduler_locations'
+            icon: rex-icon fa-location-dot
+            perm: 'scheduler[locations]'
+        caldav:
+            title: 'translate:scheduler_caldav'
+            icon: rex-icon fa-mobile-screen
+        fields:
+            title: 'translate:scheduler_fields'
+            icon: rex-icon fa-table-list
+            perm: admin
+        modules:
+            title: 'translate:scheduler_modules'
+            icon: rex-icon fa-cubes
+            perm: admin
+        import:
+            title: 'translate:scheduler_import'
+            icon: rex-icon fa-file-import
+            perm: admin
+        settings:
+            title: 'translate:scheduler_settings'
+            icon: rex-icon fa-gear
+            perm: admin
+        docs:
+            title: 'translate:scheduler_docs'
+            icon: rex-icon fa-book
+            itemClass: pull-right
+
+console_commands:
+    scheduler:reindex: KLXM\Scheduler\Console\ReindexCommand
+    scheduler:import-legacy: KLXM\Scheduler\Console\ImportLegacyCommand
+    scheduler:import-ics: KLXM\Scheduler\Console\ImportIcsCommand
+    scheduler:schema-sync: KLXM\Scheduler\Console\SchemaSyncCommand
+    scheduler:sync-subscriptions: KLXM\Scheduler\Console\SyncSubscriptionsCommand

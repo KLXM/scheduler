@@ -1,0 +1,37 @@
+# Instructions: https://github.com/FriendsOfREDAXO/installer-action/
+
+name: Publish to REDAXO.org
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: REDAXO Addon-Version (z. B. 1.0.0)
+        required: true
+        type: string
+      description:
+        description: Release-Beschreibung (optional)
+        required: false
+        type: string
+  release:
+    types:
+      - published
+
+jobs:
+  redaxo_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - if: hashFiles('composer.json') != ''
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+      - if: hashFiles('composer.json') != ''
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-dev"
+      - uses: FriendsOfREDAXO/installer-action@v1
+        with:
+          myredaxo-username: ${{ secrets.MYREDAXO_USERNAME }}
+          myredaxo-api-key: ${{ secrets.MYREDAXO_API_KEY }}
+          description: ${{ github.event.inputs.description || github.event.release.body || '' }}
+          version: ${{ github.event.inputs.version || github.event.release.tag_name }}

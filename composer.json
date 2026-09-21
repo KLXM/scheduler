@@ -1,0 +1,29 @@
+{
+    "name": "klxm/scheduler",
+    "description": "Kalender-AddOn für REDAXO mit RFC-5545-Wiederholungen, iCal und CalDAV",
+    "type": "redaxo-addon",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.4",
+        "rlanvin/php-rrule": "^2.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "KLXM\\Scheduler\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "KLXM\\Scheduler\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.4.0"
+        }
+    }
+}

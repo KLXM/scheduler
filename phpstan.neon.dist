@@ -1,0 +1,9 @@
+# Ergänzt die rexstan-Konfiguration um Eigenheiten von sabre/vobject und sabre/dav.
+parameters:
+    ignoreErrors:
+        # vobject bildet iCalendar-Eigenschaften über magische Properties ab ($vevent->DTSTART).
+        - '#^Access to an undefined property Sabre\\VObject\\Component\\(VEvent|VCalendar)::\$#'
+        # Die Backend-Interfaces von sabre/dav deklarieren ihre Arrays ohne Wertetypen.
+        -
+            message: '#no value type specified in iterable type array#'
+            path: lib/Dav/*

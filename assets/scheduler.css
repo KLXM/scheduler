@@ -1,0 +1,502 @@
+/*
+ * scheduler 7 Backend-Oberfläche.
+ * Farben hängen an Custom Properties und folgen dem hellen und dunklen REDAXO-Theme.
+ */
+:root {
+  --scheduler-accent: #3788d8;
+  --scheduler-surface: #fff;
+  --scheduler-surface-muted: #f5f7f9;
+  --scheduler-border: #d8dee4;
+  --scheduler-text: #283542;
+  --scheduler-text-muted: #6b7a88;
+  --scheduler-knob: #fff;
+  --scheduler-danger: #c0392b;
+  --scheduler-radius: 6px;
+  --scheduler-gap: 12px;
+}
+
+body.rex-theme-dark {
+  --scheduler-surface: #202b35;
+  --scheduler-surface-muted: #1a232b;
+  --scheduler-border: #364553;
+  --scheduler-text: #dbe3ea;
+  --scheduler-text-muted: #93a3b1;
+  --scheduler-knob: #93a3b1;
+}
+
+@media (prefers-color-scheme: dark) {
+  body.rex-has-theme:not(.rex-theme-light) {
+    --scheduler-surface: #202b35;
+    --scheduler-surface-muted: #1a232b;
+    --scheduler-border: #364553;
+    --scheduler-text: #dbe3ea;
+    --scheduler-text-muted: #93a3b1;
+    --scheduler-knob: #93a3b1;
+  }
+}
+
+/* ---------- Formulare ---------- */
+
+.scheduler-field {
+  display: grid;
+  grid-template-columns: minmax(120px, 190px) 1fr;
+  gap: 4px var(--scheduler-gap);
+  align-items: start;
+  margin-bottom: 14px;
+
+  & > .control-label { padding-top: 7px; text-align: left; }
+  & .help-block { margin: 4px 0 0; color: var(--scheduler-text-muted); }
+
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+.scheduler-required { color: var(--scheduler-danger); text-decoration: none; border: 0; }
+.scheduler-error { margin: 4px 0 0; color: var(--scheduler-danger); font-weight: 600; }
+.scheduler-title-input { font-size: 1.25em; height: auto; padding: 8px 12px; }
+.scheduler-location-text { margin-top: 6px; }
+
+.scheduler-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 1100px) { grid-template-columns: 1fr; }
+}
+
+.scheduler-editor-side .scheduler-field { grid-template-columns: 1fr; }
+.scheduler-editor-side .scheduler-field > .control-label { padding-top: 0; }
+
+.scheduler-form-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  background: var(--scheduler-surface);
+  border-top: 1px solid var(--scheduler-border);
+}
+.scheduler-push { margin-left: auto; }
+
+.scheduler-switch, .scheduler-choice {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 16px 0 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.scheduler-switch input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  width: 38px;
+  height: 22px;
+  margin: 0;
+  border-radius: 11px;
+  background: var(--scheduler-border);
+  transition: background .15s;
+  cursor: pointer;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--scheduler-knob);
+    box-shadow: 0 1px 2px rgb(0 0 0 / .3);
+    transition: translate .15s;
+  }
+  &:checked { background: var(--scheduler-accent); }
+  &:checked::after { background: #fff; }
+  &:checked::after { translate: 16px 0; }
+  &:focus-visible { outline: 2px solid var(--scheduler-accent); outline-offset: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scheduler-switch input[type="checkbox"], .scheduler-switch input[type="checkbox"]::after { transition: none; }
+}
+
+/* ---------- Zeitraum ---------- */
+
+.scheduler-period { display: grid; gap: 8px; }
+.scheduler-period-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+
+  & .form-control { width: auto; }
+  & select.form-control { max-width: 100%; }
+}
+.scheduler-period-label { min-width: 70px; color: var(--scheduler-text-muted); }
+
+/* ---------- Wiederholung ---------- */
+
+scheduler-recurrence { display: grid; gap: 10px; }
+scheduler-recurrence > select { max-width: 320px; }
+
+.scheduler-rrule-custom {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--scheduler-border);
+  border-radius: var(--scheduler-radius);
+  background: var(--scheduler-surface-muted);
+}
+.scheduler-rrule-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+
+  & .form-control { width: auto; }
+}
+.scheduler-rrule-label { min-width: 120px; color: var(--scheduler-text-muted); }
+.scheduler-rrule-interval { max-width: 80px; }
+.scheduler-rrule-weekdays { display: flex; gap: 4px; flex-wrap: wrap; }
+.scheduler-rrule-monthly, .scheduler-rrule-end { display: grid; gap: 6px; }
+
+.scheduler-chip {
+  min-width: 40px;
+  padding: 5px 8px;
+  border: 1px solid var(--scheduler-border);
+  border-radius: 999px;
+  background: var(--scheduler-surface);
+  color: var(--scheduler-text);
+
+  &[aria-pressed="true"] { background: var(--scheduler-accent); border-color: var(--scheduler-accent); color: #fff; }
+  &:focus-visible { outline: 2px solid var(--scheduler-accent); outline-offset: 2px; }
+}
+
+.scheduler-rrule-summary { margin: 0; font-weight: 600; }
+.scheduler-rrule-summary::first-letter { text-transform: uppercase; }
+.scheduler-rrule-next {
+  margin: 4px 0 0;
+  padding-left: 1.4em;
+  color: var(--scheduler-text-muted);
+  columns: 2 240px;
+}
+
+/* ---------- Tabs, Sprachen, Wiederholungszeilen, Schlagwörter ---------- */
+
+.scheduler-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--scheduler-border);
+}
+.scheduler-tab {
+  padding: 8px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--scheduler-text-muted);
+
+  &[aria-selected="true"] { border-bottom-color: var(--scheduler-accent); color: var(--scheduler-text); font-weight: 600; }
+  &.has-error { color: var(--scheduler-danger); }
+  &:focus-visible { outline: 2px solid var(--scheduler-accent); outline-offset: -2px; }
+}
+
+scheduler-lang-field { display: block; }
+.scheduler-lang-switch { display: inline-flex; margin-bottom: 4px; border: 1px solid var(--scheduler-border); border-radius: var(--scheduler-radius); overflow: hidden; }
+.scheduler-lang-button {
+  padding: 2px 10px;
+  border: 0;
+  background: var(--scheduler-surface);
+  color: var(--scheduler-text-muted);
+  font-size: .85em;
+
+  &[aria-pressed="true"] { background: var(--scheduler-accent); color: #fff; }
+  &.is-filled::after { content: " •"; }
+}
+
+.scheduler-fieldset { margin: 0 0 16px; padding: 12px 14px 2px; border: 1px solid var(--scheduler-border); border-radius: var(--scheduler-radius); }
+.scheduler-fieldset > legend { width: auto; margin: 0; padding: 0 6px; border: 0; font-size: 1em; font-weight: 600; }
+.scheduler-columns { display: grid; grid-template-columns: repeat(12, 1fr); gap: 0 20px; }
+.scheduler-column { grid-column: span var(--scheduler-span, 6); @media (max-width: 900px) { grid-column: 1 / -1; } }
+.scheduler-column .scheduler-field { grid-template-columns: 1fr; }
+.scheduler-color { width: 60px; height: 34px; padding: 2px; }
+
+.scheduler-repeater { display: block; margin-bottom: 16px; }
+.scheduler-repeater-head { margin-bottom: 6px; font-weight: 600; }
+.scheduler-repeater-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 10px 12px 0;
+  margin-bottom: 8px;
+  border: 1px solid var(--scheduler-border);
+  border-radius: var(--scheduler-radius);
+  background: var(--scheduler-surface-muted);
+}
+.scheduler-repeater-actions { display: flex; gap: 4px; align-items: start; }
+
+scheduler-tags { display: block; }
+.scheduler-tag-list { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 6px; padding: 0; list-style: none; }
+.scheduler-tag-list:empty { display: none; }
+.scheduler-tag {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 2px 4px 2px 10px;
+  border-radius: 999px;
+  background: var(--scheduler-surface-muted);
+  border: 1px solid var(--scheduler-border);
+}
+.scheduler-tag-remove { border: 0; background: none; color: var(--scheduler-text-muted); padding: 0 4px; }
+
+/* ---------- Listen ---------- */
+
+.scheduler-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  & .form-control { width: auto; min-width: 180px; }
+  & input[type="search"] { flex: 1 1 240px; }
+}
+.scheduler-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--scheduler-color, #999); }
+.scheduler-muted-icon { color: var(--scheduler-text-muted); }
+.scheduler-cancelled td:nth-child(2) { text-decoration: line-through; }
+.scheduler-empty { padding: 32px !important; text-align: center; color: var(--scheduler-text-muted); }
+.scheduler-exceptions { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.scheduler-exception-type { display: inline-block; min-width: 80px; font-weight: 600; }
+.scheduler-series-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---------- Kalender ---------- */
+
+scheduler-calendar { display: block; }
+.scheduler-calendar-bar { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin-bottom: 12px; }
+.scheduler-calendar-filter { display: inline-flex; gap: 6px; align-items: center; margin: 0; font-weight: 400; cursor: pointer; }
+.scheduler-calendar-filter input { accent-color: var(--scheduler-color, var(--scheduler-accent)); }
+.scheduler-calendar-view {
+  padding: 12px;
+  border: 1px solid var(--scheduler-border);
+  border-radius: var(--scheduler-radius);
+  background: var(--scheduler-surface);
+  color: var(--scheduler-text);
+  --fc-border-color: var(--scheduler-border);
+  --fc-page-bg-color: var(--scheduler-surface);
+  --fc-neutral-bg-color: var(--scheduler-surface-muted);
+  --fc-today-bg-color: color-mix(in srgb, var(--scheduler-accent) 12%, transparent);
+  --fc-list-event-hover-bg-color: var(--scheduler-surface-muted);
+}
+.scheduler-calendar-view .fc-event { cursor: pointer; }
+.scheduler-calendar-view .fc-event.is-offline { opacity: .55; }
+.scheduler-calendar-view .fc-event.is-cancelled .fc-event-title { text-decoration: line-through; }
+.scheduler-calendar-view .fc-toolbar-title { font-size: 1.4em; }
+.scheduler-calendar-view a { color: inherit; }
+/*
+ * Eigene Optik über die ID: forcal 6 lädt im Parallelbetrieb auf allen Backend-Seiten globale ".fc"-Regeln
+ * (helle Toolbar, feste Rahmen- und Buttonfarben), die weder zu scheduler noch zum dunklen Theme passen.
+ */
+#scheduler-calendar-view .fc-toolbar { margin: 0 0 12px; padding: 0; background: transparent; }
+#scheduler-calendar-view .fc-toolbar-title { color: var(--scheduler-text); }
+#scheduler-calendar-view .fc-scrollgrid,
+#scheduler-calendar-view .fc-scrollgrid td,
+#scheduler-calendar-view .fc-scrollgrid th,
+#scheduler-calendar-view .fc-list,
+#scheduler-calendar-view .fc-multimonth { border-color: var(--scheduler-border); }
+#scheduler-calendar-view .fc-col-header-cell { background: var(--scheduler-surface-muted); }
+#scheduler-calendar-view .fc-col-header-cell-cushion,
+#scheduler-calendar-view .fc-multimonth-title { color: var(--scheduler-text-muted); font-weight: 600; text-decoration: none; }
+#scheduler-calendar-view .fc-daygrid-day-number,
+#scheduler-calendar-view .fc-list-day-cushion a,
+#scheduler-calendar-view .fc-timegrid-slot-label-cushion,
+#scheduler-calendar-view .fc-timegrid-axis-cushion { color: var(--scheduler-text); text-decoration: none; }
+#scheduler-calendar-view .fc-day-other .fc-daygrid-day-number { color: var(--scheduler-text-muted); }
+#scheduler-calendar-view .fc-day-today .fc-daygrid-day-number { color: var(--scheduler-accent); font-weight: 700; }
+#scheduler-calendar-view .fc-daygrid-week-number { border-radius: 0 0 4px; background: var(--scheduler-surface-muted); color: var(--scheduler-text-muted); font-size: .8em; }
+#scheduler-calendar-view .fc-list-day-cushion,
+#scheduler-calendar-view .fc-multimonth-header,
+#scheduler-calendar-view .fc-multimonth-daygrid { background: var(--scheduler-surface-muted); }
+#scheduler-calendar-view .fc-multimonth-daygrid { background: var(--scheduler-surface); }
+#scheduler-calendar-view .fc-popover { border-color: var(--scheduler-border); background: var(--scheduler-surface); color: var(--scheduler-text); box-shadow: 0 8px 30px rgb(0 0 0 / .35); }
+#scheduler-calendar-view .fc-popover-header { background: var(--scheduler-surface-muted); color: var(--scheduler-text); }
+#scheduler-calendar-view .fc-highlight { background: color-mix(in srgb, var(--scheduler-accent) 22%, transparent); }
+#scheduler-calendar-view .fc-button,
+#scheduler-calendar-view .fc-button:disabled {
+  border: 1px solid var(--scheduler-border);
+  background: var(--scheduler-surface-muted);
+  color: var(--scheduler-text);
+  box-shadow: none;
+  text-shadow: none;
+}
+#scheduler-calendar-view .fc-button:disabled { opacity: .5; }
+#scheduler-calendar-view .fc-button:not(:disabled):hover { border-color: var(--scheduler-accent); color: var(--scheduler-text); }
+#scheduler-calendar-view .fc-button:focus-visible { outline: 2px solid var(--scheduler-accent); outline-offset: 1px; box-shadow: none; }
+#scheduler-calendar-view .fc-button.fc-button-active,
+#scheduler-calendar-view .fc-button:not(:disabled):active { border-color: var(--scheduler-accent); background: var(--scheduler-accent); color: #fff; }
+/*
+ * Flächige Termine tragen die zur Kalenderfarbe passende Schriftfarbe (vom Server aus der Helligkeit
+ * der Fläche berechnet). !important ist nötig, weil forcal 6 im Parallelbetrieb auf allen Backend-Seiten
+ * ".fc-event .fc-event-main { color: #333 !important }" lädt, im dunklen Theme sogar mit body-Klassen davor. Deshalb die ID.
+ */
+#scheduler-calendar-view .fc-h-event .fc-event-main,
+#scheduler-calendar-view .fc-v-event .fc-event-main,
+#scheduler-calendar-view .fc-h-event .fc-event-main *,
+#scheduler-calendar-view .fc-v-event .fc-event-main * { color: var(--fc-event-text-color, #fff) !important; }
+/* Termine mit Uhrzeit erscheinen im Monat als Punkt mit Text auf dem Seitenhintergrund. */
+#scheduler-calendar-view .fc-daygrid-dot-event,
+#scheduler-calendar-view .fc-daygrid-dot-event *,
+#scheduler-calendar-view .fc-list-event td,
+#scheduler-calendar-view .fc-list-event a { color: var(--scheduler-text) !important; }
+
+/* ---------- Dialoge und Meldungen ---------- */
+
+.scheduler-dialog {
+  width: min(480px, calc(100vw - 32px));
+  padding: 20px;
+  border: 1px solid var(--scheduler-border);
+  border-radius: 10px;
+  background: var(--scheduler-surface);
+  color: var(--scheduler-text);
+  box-shadow: 0 20px 60px rgb(0 0 0 / .35);
+
+  &::backdrop { background: rgb(0 0 0 / .45); }
+}
+.scheduler-dialog-title { margin: 0 0 12px; color: var(--scheduler-text); font-size: 1.25em; }
+.scheduler-dialog-actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; margin-top: 16px; }
+.scheduler-dialog .form-group { margin-bottom: 10px; }
+
+.scheduler-toasts { position: fixed; right: 20px; bottom: 20px; z-index: 2000; display: grid; gap: 8px; }
+.scheduler-toast { padding: 10px 14px; border-radius: var(--scheduler-radius); background: #283542; color: #fff; box-shadow: 0 6px 20px rgb(0 0 0 / .3); }
+.scheduler-toast-error { background: var(--scheduler-danger); }
+
+/* ---------- Import ---------- */
+
+.scheduler-report th { width: 320px; font-weight: 400; }
+.scheduler-report-messages { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.scheduler-report-messages li { padding: 6px 10px; border-left: 3px solid var(--scheduler-border); background: var(--scheduler-surface-muted); }
+.scheduler-report-warning { border-left-color: #e0a800 !important; }
+.scheduler-report-error { border-left-color: var(--scheduler-danger) !important; }
+
+/* ---------- Formbuilder ---------- */
+
+.scheduler-target-nav { margin-bottom: 16px; }
+.scheduler-core-note { padding: 10px 12px; border-radius: var(--scheduler-radius); background: var(--scheduler-surface-muted); color: var(--scheduler-text-muted); }
+.scheduler-publish { display: flex; gap: 8px; & .form-control { flex: 1; } }
+.scheduler-inline-form { display: inline-flex; gap: 8px; align-items: center; margin: 0; }
+.scheduler-exchange { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; margin-bottom: 8px; }
+
+/* Die Breite des Builders zählt, nicht die des Fensters: Die REDAXO-Navigation nimmt einen Teil davon. */
+scheduler-field-builder { display: block; container-type: inline-size; }
+.scheduler-fb-layout {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) 320px;
+  gap: 16px;
+  align-items: start;
+
+  @container (max-width: 1050px) { grid-template-columns: 160px minmax(0, 1fr); & .scheduler-fb-properties { grid-column: 2; position: static; max-height: none; } }
+}
+
+.scheduler-fb-palette, .scheduler-fb-properties {
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--scheduler-border);
+  border-radius: var(--scheduler-radius);
+  background: var(--scheduler-surface-muted);
+
+  & h3 { margin: 0 0 10px; color: var(--scheduler-text-muted); font-size: .85em; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  & h3:not(:first-child) { margin-top: 16px; }
+}
+
+.scheduler-fb-palette-item {
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 6px 10px;
+  border: 1px solid var(--scheduler-border);
+  border-radius: var(--scheduler-radius);
+  background: var(--scheduler-surface);
+  color: var(--scheduler-text);
+  text-align: left;
+  cursor: grab;
+
+  &:hover, &:focus-visible { border-color: var(--scheduler-accent); outline: none; }
+}
+
+.scheduler-fb-canvas { min-height: 240px; }
+.scheduler-fb-canvas > .scheduler-fb-children { min-height: 200px; padding-bottom: 40px; }
+.scheduler-fb-empty { padding: 24px; text-align: center; color: var(--scheduler-text-muted); }
+.scheduler-fb-children { display: grid; gap: 6px; min-height: 36px; }
+.scheduler-fb-node-container > .scheduler-fb-children {
+  margin: 0 8px 8px 24px;
+  padding: 6px;
+  border: 1px dashed var(--scheduler-border);
+  border-radius: var(--scheduler-radius);
+}
+.scheduler-fb-node[data-type="columns"] > .scheduler-fb-children { grid-auto-flow: column; grid-auto-columns: 1fr; }
+
+.scheduler-fb-node {
+  border: 1px solid var(--scheduler-border);
+  border-radius: var(--scheduler-radius);
+  background: var(--scheduler-surface);
+
+  &.is-selected { border-color: var(--scheduler-accent); box-shadow: 0 0 0 1px var(--scheduler-accent); }
+  &.is-dragging { opacity: .4; }
+}
+.scheduler-fb-node-head { display: flex; align-items: center; gap: 4px; padding: 4px 6px; }
+.scheduler-fb-grip { color: var(--scheduler-text-muted); cursor: grab; padding: 0 4px; }
+.scheduler-fb-node-title {
+  flex: 1;
+  min-width: 0;
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  & code { font-size: .85em; }
+  &:focus-visible { outline: 2px solid var(--scheduler-accent); border-radius: 4px; }
+}
+.scheduler-fb-type, .scheduler-fb-flag { margin-left: 4px; padding: 1px 7px; border-radius: 999px; font-size: .8em; background: var(--scheduler-surface-muted); color: var(--scheduler-text-muted); }
+.scheduler-fb-flag { background: color-mix(in srgb, var(--scheduler-accent) 15%, transparent); color: var(--scheduler-text); }
+.scheduler-fb-node-actions { display: flex; opacity: .35; transition: opacity .15s; }
+.scheduler-fb-node-head:hover .scheduler-fb-node-actions, .scheduler-fb-node-head:focus-within .scheduler-fb-node-actions, .is-selected > .scheduler-fb-node-head .scheduler-fb-node-actions { opacity: 1; }
+.scheduler-fb-button { border: 0; background: none; color: var(--scheduler-text-muted); padding: 4px 6px; border-radius: 4px; &:hover, &:focus-visible { color: var(--scheduler-text); background: var(--scheduler-surface-muted); outline: none; } }
+.scheduler-fb-indicator { height: 3px; border-radius: 2px; background: var(--scheduler-accent); }
+
+.scheduler-fb-properties .form-group { margin-bottom: 10px; }
+.scheduler-fb-properties [aria-invalid="true"] { border-color: var(--scheduler-danger); }
+.scheduler-fb-properties [aria-invalid="true"] + .help-block { color: var(--scheduler-danger); }
+.scheduler-fb-visibility { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--scheduler-border); & legend { border: 0; font-size: 1em; font-weight: 600; margin-bottom: 6px; } }
+
+.scheduler-fb-preview { margin-top: 16px; border: 1px solid var(--scheduler-border); border-radius: var(--scheduler-radius); }
+.scheduler-fb-preview > summary { padding: 10px 14px; cursor: pointer; font-weight: 600; }
+.scheduler-fb-preview-body { padding: 14px; border-top: 1px solid var(--scheduler-border); }
+
+/* ---------- CalDAV ---------- */
+
+.scheduler-secret { display: inline-block; margin-top: 6px; padding: 6px 12px; font-size: 1.3em; letter-spacing: .05em; user-select: all; }
+.scheduler-dav-facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; & dt { font-weight: 600; } & dd { margin: 0; } }
+
+/* ---------- Hilfe ---------- */
+
+.scheduler-docs { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: start; @media (max-width: 900px) { grid-template-columns: 1fr; } }
+.scheduler-docs-nav { position: sticky; top: 12px; & ul { margin: 0; padding: 0; list-style: none; } & a { display: block; padding: 7px 12px; border-radius: var(--scheduler-radius); color: var(--scheduler-text); } & a[aria-current="page"] { background: var(--scheduler-accent); color: #fff; } }
+.scheduler-docs-content { padding: 8px 28px 28px; border: 1px solid var(--scheduler-border); border-radius: var(--scheduler-radius); background: var(--scheduler-surface); max-width: 900px; color: var(--scheduler-text); & :is(h1, h2, h3, h4, em) { color: inherit; } & h1 { margin-top: 16px; } & h2 { margin-top: 32px; padding-bottom: 6px; border-bottom: 1px solid var(--scheduler-border); } & table { width: 100%; margin: 12px 0; border-collapse: collapse; } & th, & td { padding: 6px 10px; border: 1px solid var(--scheduler-border); vertical-align: top; text-align: left; } & th { background: var(--scheduler-surface-muted); } & pre { padding: 12px; overflow: auto; } }
+
+/* ---------- Anlegen aus dem Formular ---------- */
+
+scheduler-quick-create, scheduler-yform-field { display: block; }
+.scheduler-quick-create-button { margin-top: 6px; }
+.scheduler-break { word-break: break-all; }
+.scheduler-subscribe-interval { margin-top: 6px; }
+.scheduler-dav-calendars { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.scheduler-lead { font-size: 1.1em; max-width: 75ch; }
+.scheduler-benefits { margin: 10px 0 0; padding-left: 1.3em; max-width: 80ch; & li { margin: 4px 0; } }

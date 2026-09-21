@@ -1,0 +1,51 @@
+/*
+ * Optionales Grundstyling für die scheduler-Fragmente. Bewusst zurückhaltend: Schrift und Farben
+ * kommen vom Projekt. Überschreiben über die Custom Properties oder ganz weglassen.
+ */
+.scheduler-list, .scheduler-detail, scheduler-frontend-calendar {
+  --scheduler-accent: #3788d8;
+  --scheduler-muted: color-mix(in srgb, currentColor 60%, transparent);
+  --scheduler-line: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.scheduler-list { display: grid; gap: 1rem; }
+.scheduler-list-month { margin: 1.5rem 0 0; font-size: 1.1em; }
+
+.scheduler-item {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--scheduler-line);
+}
+.scheduler-item-date {
+  display: grid;
+  place-content: center;
+  text-align: center;
+  aspect-ratio: 1;
+  border-radius: .5rem;
+  background: color-mix(in srgb, var(--scheduler-color, var(--scheduler-accent)) 14%, transparent);
+  border-top: .3rem solid var(--scheduler-color, var(--scheduler-accent));
+}
+.scheduler-item-day { font-size: 1.6em; font-weight: 700; line-height: 1; }
+.scheduler-item-month { font-size: .8em; text-transform: uppercase; letter-spacing: .05em; }
+.scheduler-item-title { margin: 0 0 .2rem; font-size: 1.1em; }
+.scheduler-item-meta { margin: 0; color: var(--scheduler-muted); }
+.scheduler-item-location::before, .scheduler-item-calendar::before { content: " · "; }
+.scheduler-item-teaser { margin: .4rem 0 0; }
+
+.scheduler-is-cancelled .scheduler-item-title, .scheduler-is-cancelled .scheduler-detail-title, .scheduler-is-cancelled .fc-event-title { text-decoration: line-through; }
+.scheduler-badge { margin-left: .5em; padding: .1em .6em; border-radius: 999px; font-size: .7em; font-weight: 600; text-decoration: none; display: inline-block; background: #c0392b; color: #fff; vertical-align: middle; }
+
+.scheduler-detail-when { font-size: 1.15em; font-weight: 600; margin: 0; }
+.scheduler-detail-rule { margin: .2rem 0 0; color: var(--scheduler-muted); }
+.scheduler-detail-location { margin: 1rem 0; font-style: normal; }
+.scheduler-detail-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+.scheduler-button { display: inline-block; padding: .5em 1em; border-radius: .4rem; background: var(--scheduler-accent); color: #fff; text-decoration: none; }
+.scheduler-button-plain { background: none; color: inherit; border: 1px solid var(--scheduler-line); }
+.scheduler-empty { color: var(--scheduler-muted); }
+
+scheduler-frontend-calendar { display: block; min-height: 20rem; }
+scheduler-frontend-calendar .fc-event { cursor: pointer; }
+
+scheduler-frontend-calendar .fc-h-event .fc-event-main, scheduler-frontend-calendar .fc-v-event .fc-event-main { color: var(--fc-event-text-color, #fff); }

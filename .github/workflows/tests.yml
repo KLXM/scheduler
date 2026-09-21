@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          path: scheduler
+      # Die sabre-Bibliotheken kommen aus dem Addon dav, das als Nachbarordner erwartet wird.
+      - uses: actions/checkout@v6
+        with:
+          repository: KLXM/dav
+          path: dav
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: intl, mbstring, xml
+          coverage: none
+      - uses: ramsey/composer-install@v3
+        with:
+          working-directory: dav
+          composer-options: "--no-dev"
+      - uses: ramsey/composer-install@v3
+        with:
+          working-directory: scheduler
+      - run: vendor/bin/phpunit --testsuite unit
+        working-directory: scheduler
