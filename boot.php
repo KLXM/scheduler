@@ -7,7 +7,36 @@ use KLXM\Scheduler\Api\FeedApi;
 use KLXM\Scheduler\Security\CalendarPerm;
 
 // sabre/vobject und sabre/dav kommen aus dem Addon dav, das vor scheduler startet. Hier nur die eigene RRULE-Bibliothek.
-require_once __DIR__ . '/vendor/autoload.php';
+//
+// Bewusst NICHT vendor/autoload.php: Sind die Dev-Abhaengigkeiten installiert (composer install ohne
+// --no-dev, wie bei der Entwicklung am Addon), registriert dieser Autoloader auch PHPUnit samt dessen
+// globaler Functions.php - und zwar bei jedem REDAXO-Request. Laeuft dann in einem anderen Addon eine
+// Testsuite mit abweichender PHPUnit-Major-Version, gewinnt die hier geladene und die Suite bricht mit
+// "Subscriber does not implement any known interface" ab. Fuer die Laufzeit brauchen wir ohnehin nur
+// RRule, deshalb wird gezielt nur das registriert.
+(static function (): void {
+    $vendor = __DIR__ . '/vendor';
+    $rrule = $vendor . '/rlanvin/php-rrule/src';
+
+    if (!is_dir($rrule)) {
+        // Fallback fuer abweichende Installationen: dann doch den vollen Autoloader.
+        if (is_file($vendor . '/autoload.php')) {
+            require_once $vendor . '/autoload.php';
+        }
+        return;
+    }
+
+    spl_autoload_register(static function (string $class) use ($rrule): void {
+        if (!str_starts_with($class, 'RRule\\')) {
+            return;
+        }
+
+        $file = $rrule . '/' . str_replace('\\', '/', substr($class, 6)) . '.php';
+        if (is_file($file)) {
+            require_once $file;
+        }
+    });
+})();
 
 $addon = rex_addon::get('scheduler');
 
