@@ -68,3 +68,14 @@ console_commands:
     scheduler:import-ics: KLXM\Scheduler\Console\ImportIcsCommand
     scheduler:schema-sync: KLXM\Scheduler\Console\SchemaSyncCommand
     scheduler:sync-subscriptions: KLXM\Scheduler\Console\SyncSubscriptionsCommand
+# Nicht mit ausliefern: Entwicklungs- und Test-Artefakte.
+# docs/ bleibt drin, die Doku-Seite im Backend liest daraus.
+installer_ignore:
+    - .github
+    - .gitignore
+    - .phpunit.result.cache
+    - composer.json
+    - composer.lock
+    - phpstan.neon.dist
+    - phpunit.xml.dist
+    - tests
